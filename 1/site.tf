@@ -1,4 +1,3 @@
-// TODO: private hosted zone
 // TODO: site content
 // TODO: web traffic logging
 // TODO: TLS
@@ -41,3 +40,37 @@ resource "aws_s3_bucket" "www" {
   }
 }
 
+resource "aws_route53_delegation_set" "main" {}
+
+resource "aws_route53_zone" "main" {
+  name              = "${var.root_domain}"
+  delegation_set_id = "${aws_route53_delegation_set.main.id}"
+
+  tags {
+    terraform = "true"
+  }
+}
+
+resource "aws_route53_record" "root" {
+  zone_id = "${aws_route53_zone.main.zone_id}"
+  name    = "${aws_s3_bucket.root.bucket}"
+  type    = "A"
+
+  alias {
+    name                   = "${aws_s3_bucket.root.website_domain}"
+    zone_id                = "${aws_s3_bucket.root.hosted_zone_id}"
+    evaluate_target_health = "true"
+  }
+}
+
+resource "aws_route53_record" "www" {
+  zone_id = "${aws_route53_zone.main.zone_id}"
+  name    = "${aws_s3_bucket.www.bucket}"
+  type    = "A"
+
+  alias {
+    name                   = "${aws_s3_bucket.www.website_domain}"
+    zone_id                = "${aws_s3_bucket.www.hosted_zone_id}"
+    evaluate_target_health = "true"
+  }
+}
