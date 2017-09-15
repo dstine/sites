@@ -10,6 +10,10 @@ resource "aws_s3_bucket" "root" {
     index_document = "index.html"
   }
 
+  tags {
+    terraform = "true"
+  }
+
   policy = <<EOF
 {
   "Version":"2012-10-17",
@@ -37,6 +41,10 @@ resource "aws_s3_bucket" "www" {
 
   website {
     redirect_all_requests_to = "${var.root_domain}"
+  }
+
+  tags {
+    terraform = "true"
   }
 }
 
