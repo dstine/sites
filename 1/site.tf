@@ -11,6 +11,7 @@ resource "aws_s3_bucket" "root" {
   }
 
   tags {
+    project   = "${var.project}"
     terraform = "true"
   }
 
@@ -44,6 +45,7 @@ resource "aws_s3_bucket" "www" {
   }
 
   tags {
+    project   = "${var.project}"
     terraform = "true"
   }
 }
@@ -55,6 +57,7 @@ resource "aws_route53_zone" "main" {
   delegation_set_id = "${aws_route53_delegation_set.main.id}"
 
   tags {
+    project   = "${var.project}"
     terraform = "true"
   }
 }

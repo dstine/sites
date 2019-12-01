@@ -7,3 +7,6 @@ variable "aws_credentials_profile" {
 variable "root_domain" {
   type = "string"
 }
+
+variable "project" {}
+
